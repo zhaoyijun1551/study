@@ -1,0 +1,39 @@
+本文主要讲解mall整合Redis的过程，以短信验证码的存储验证为例。
+一、Redis的安装和启动:
+Redis是用C语言开发的一个高性能键值对数据库，可用于数据缓存，主要用于处理大量数据的高访问负载。
+1.下载Redis,下载地址：https://github.com/MicrosoftArchive/redis/releases
+2.下载完后解压到指定目录
+3.在当前地址栏输入cmd后，执行redis的启动命令：redis-server.exe redis.windows.conf
+
+二、整合Redis
+1、添加项目依赖 在pom.xml中新增Redis相关依赖
+<!--redis依赖配置-->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+2、修改SpringBoot配置文件 在application.yml中添加Redis的配置及Redis中自定义key的配置。
+2.1在spring节点下添加Redis的配置：
+      redis:
+        host: localhost # Redis服务器地址
+        database: 0 # Redis数据库索引（默认为0）
+        port: 6379 # Redis服务器连接端口
+        password: # Redis服务器连接密码（默认为空）
+        jedis:
+          pool:
+            max-active: 8 # 连接池最大连接数（使用负值表示没有限制）
+            max-wait: -1ms # 连接池最大阻塞等待时间（使用负值表示没有限制）
+            max-idle: 8 # 连接池中的最大空闲连接
+            min-idle: 0 # 连接池中的最小空闲连接
+        timeout: 3000ms # 连接超时时间（毫秒）
+2.2 在根节点下添加Redis自定义key的配置：
+# 自定义redis key
+redis:
+  key:
+    prefix:
+      authCode: "portal:authCode:"
+    expire:
+      authCode: 120 # 验证码超期时间
+
+三、添加RedisService接口用于定义一些常用Redis操作
+
