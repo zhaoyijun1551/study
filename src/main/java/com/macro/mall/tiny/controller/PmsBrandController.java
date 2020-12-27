@@ -21,6 +21,7 @@ import java.util.List;
 @Api(tags = "PmsBrandController", description = "商品品牌管理")
 @Controller
 @RequestMapping("/brand")
+
 public class PmsBrandController {
     @Autowired
     private PmsBrandService demoService;
